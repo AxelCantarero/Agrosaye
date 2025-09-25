@@ -1,4 +1,5 @@
 import * as ingresoService from '../services/ingreso.service.js';
+import { disminuirProduccionCultivo } from '../services/inventarioCultivo.service.js';
 
 export const getIngresos = async (req, res) => {
   try {
@@ -22,6 +23,10 @@ export const getIngresoById = async (req, res) => {
 export const createIngreso = async (req, res) => {
   try {
     const nuevoIngreso = await ingresoService.createIngreso(req.body);
+
+    if(req.body.cultivoId && req.body.cantidad){
+      await disminuirProduccionCultivo(req.body.cultivoId, req.body.cantidad)
+    }
     res.status(201).json(nuevoIngreso);
   } catch (error) {
     res.status(500).json({ error: error.message });
