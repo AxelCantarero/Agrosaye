@@ -20,3 +20,9 @@ export const aumentarInventarioProducto = async (idProducto, cantidad) => {
     data: { cantidad: { increment: cantidad } }
   });
 };
+export const disminuirInventarioProducto = async (idProducto, cantidad) => {
+  return prisma.inventarioProducto.update({
+    where: { idProducto: Number(idProducto) },
+    data: { cantidad: { decrement: cantidad } }
+  });
+};
