@@ -13,3 +13,10 @@ export const updateInventarioProducto = (id, data) =>
 
 export const deleteInventarioProducto = (id) =>
   prisma.inventarioProducto.delete({ where: { idInventarioProducto: Number(id) } });
+
+export const aumentarInventarioProducto = async (idProducto, cantidad) => {
+  return prisma.inventarioProducto.update({
+    where: { idProducto: Number(idProducto) },
+    data: { cantidad: { increment: cantidad } }
+  });
+};
