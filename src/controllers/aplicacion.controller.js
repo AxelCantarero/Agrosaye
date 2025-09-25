@@ -1,4 +1,5 @@
 import * as aplicacionService from '../services/aplicacion.service.js';
+import { disminuirInventarioProducto } from '../services/inventarioProducto.service.js';
 
 export const getAplicaciones = async (req, res) => {
   try {
@@ -22,6 +23,9 @@ export const getAplicacionById = async (req, res) => {
 export const createAplicacion = async (req, res) => {
   try {
     const nuevaAplicacion = await aplicacionService.createAplicacion(req.body);
+    if(req.body.productoId && req.body.cantidad){
+      await disminuirInventarioProducto(req.body.productoId, req.body.cantidad)
+    }
     res.status(201).json(nuevaAplicacion);
   } catch (error) {
     res.status(500).json({ error: error.message });
