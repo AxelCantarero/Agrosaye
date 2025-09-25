@@ -1,4 +1,5 @@
 import * as egresoService from '../services/egreso.service.js';
+import { aumentarInventarioProducto } from '../services/inventarioProducto.service.js';
 
 export const getEgresos = async (req, res) => {
   try {
@@ -22,6 +23,10 @@ export const getEgresoById = async (req, res) => {
 export const createEgreso = async (req, res) => {
   try {
     const nuevoEgreso = await egresoService.createEgreso(req.body);
+
+    if(req.body.productoId && req.body.cantidad){
+      await aumentarInventarioProducto(req.body.productoId, req.body.cantidad);
+    }
     res.status(201).json(nuevoEgreso);
   } catch (error) {
     res.status(500).json({ error: error.message });
