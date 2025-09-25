@@ -10,4 +10,15 @@ export const updateInventarioCultivo = (id,data) => prisma.inventarioCultivo.upd
 
 export const deleteInventarioCultivo = (id) => prisma.inventarioCultivo.delete({where:{idInventarioCultivo: Number(id)}});
 
-//CRUD
+export const aumentarProduccionCultivo = async (idCultivo, cantidad) => {
+  return prisma.inventarioCultivo.update({
+    where: { idCultivo: Number(idCultivo) },
+    data: { produccion: { increment: cantidad } }
+  });
+};
+export const disminuirProduccionCultivo = async (idCultivo, cantidad) => {
+  return prisma.inventarioCultivo.update({
+    where: { idCultivo: Number(idCultivo) },
+    data: { produccion: { decrement: cantidad } }
+  });
+};
