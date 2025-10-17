@@ -14,12 +14,16 @@ import inventarioCultivoRoutes from "./routes/inventarioCultivo.routes.js";
 import inventarioProductoRoutes from "./routes/inventarioProducto.routes.js";
 import estadoRoutes from "./routes/estado.routes.js";
 import authRoutes from "./routes/auth.routes.js";
-
+import cors from "cors"
 dotenv.config();
 
 const app = express()
+//
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 app.use(express.json())
-
 app.use("/api/fincas", fincaRoutes);
 app.use("/api/cultivos", cultivoRoutes);
 app.use("/api/unidades", unidadMedidaRoutes);
