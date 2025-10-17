@@ -19,8 +19,6 @@ model Usuario {
   contrasena     String
   fincaId        Int?
   finca          InformacionFinca? @relation(fields: [fincaId], references: [idFinca])
-  ingresos       Ingreso[]
-  gastos         Egreso[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 }
@@ -193,8 +191,6 @@ model Ingreso {
   fincaId       Int
   
   finca       InformacionFinca @relation(fields: [fincaId], references: [idFinca])
-  usuario     Usuario            @relation(fields: [usuarioId], references: [idUsuario])
-  
 }
 
 model Egreso {
@@ -207,7 +203,7 @@ model Egreso {
   idInventarioProducto Int?
   fincaId       Int
   finca       InformacionFinca @relation(fields: [fincaId], references: [idFinca])
-  usuario     Usuario            @relation(fields: [usuarioId], references: [idUsuario])
+
 
 }
 

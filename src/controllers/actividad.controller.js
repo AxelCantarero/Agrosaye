@@ -22,11 +22,12 @@ export const getActividadById = async (req, res) => {
 
 export const createActividad = async (req, res) => {
   try {
-    const nuevaActividad = await actividadService.createActividad(req.body);
-    res.status(201).json(nuevaActividad);
     if(req.body.idProducto && req.body.cantidad){
       await disminuirInventarioProducto(req.body.idProducto, req.body.cantidad)
     }
+    const nuevaActividad = await actividadService.createActividad(req.body);
+    res.status(201).json(nuevaActividad);
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

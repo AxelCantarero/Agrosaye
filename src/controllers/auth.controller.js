@@ -14,8 +14,7 @@ export const register = async (req, res) => {
     console.error(" Error en register:", error);
     res.status(500).json({ error: error.message });
   }
-};
-
+}
 export const login = async (req, res) => {
   try {
     const { nombreUsuario, contrasena } = req.body;
@@ -38,4 +37,4 @@ export const login = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-};
+}
