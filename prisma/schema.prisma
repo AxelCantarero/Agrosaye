@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Usuario {
-  idUsuario             Int       @id @default(autoincrement())
+  idUsuario      Int       @id @default(autoincrement())
   nombreUsuario  String    @unique
   contrasena     String
   fincaId        Int?
@@ -53,41 +53,36 @@ model UnidadMedida {
 }
 
 model Cultivo {
-  idCultivo          Int       @id @default(autoincrement())
+  idCultivo   Int       @id @default(autoincrement())
   nombre      String
   tipo        String
   produccion  Decimal?   @db.Decimal(10,2)
   fechaInicio DateTime
   fechaFin    DateTime?
   idEstado      Int
-
+  areaSembrada       Decimal?   @db.Decimal(10,2)
   estado      Estado              @relation(fields: [idEstado], references: [idEstado])
-  inventario  InventarioCultivo?
+  inventario  InventarioCultivo[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  Aplicacion Aplicacion[]
+
+  Actividad Actividad[]
+
+  Recordatorio Recordatorio[]
 }
 
 model InventarioCultivo {
   idInventarioCultivo Int       @id @default(autoincrement())
   idFinca             Int
-  cultivoId           Int       @unique
-  fechaSiembra        DateTime?
-  fechaCosecha        DateTime?
-  produccion          Decimal?   @db.Decimal(10,2)
-  estado              String?    @db.VarChar(45)
+  cultivoId           Int     
   descripcion         String?    
-  areaSembrada        Decimal?   @db.Decimal(10,2)
   idUnidadMedida      Int?
-
   cultivo       Cultivo         @relation(fields: [cultivoId], references: [idCultivo])
   finca         InformacionFinca @relation(fields: [idFinca], references: [idFinca])
   unidadMedida  UnidadMedida?    @relation(fields: [idUnidadMedida], references: [idUnidadMedida])
-  actividades   Actividad[]
-  aplicaciones  Aplicacion[]
-  recordatorios Recordatorio[]
-  ingresos      Ingreso[]
-  gastos        Egreso[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -99,42 +94,45 @@ model Producto {
   idProducto   Int      @id @default(autoincrement())
   nombre       String
   descripcion  String?
-  inventario   InventarioProducto?
+  inventario   InventarioProducto[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 model InventarioProducto {
-  idInventarioProducto Int     @id @default(autoincrement())
-  cantidad             Decimal @db.Decimal(10,2)
+  idInventarioProducto Int      @id @default(autoincrement())
+  stock                Decimal  @db.Decimal(10,2) 
   idUnidadMedida       Int?
-  idProducto           Int     @unique
+  idProducto           Int       
   idFinca              Int?
 
   producto     Producto           @relation(fields: [idProducto], references: [idProducto])
   unidadMedida UnidadMedida?      @relation(fields: [idUnidadMedida], references: [idUnidadMedida])
   finca        InformacionFinca?  @relation(fields: [idFinca], references: [idFinca])
-  aplicaciones Aplicacion[]
-  ingresos      Ingreso[]
-  gastos        Egreso[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("InventarioProducto")
+  
+  Aplicacion Aplicacion[]
 }
 
 model Actividad {
-  idActividad    Int      @id @default(autoincrement())
-  idCultivo      Int
-  nombre         String   @db.VarChar(45)
-  descripcion    String?  
-  costo          Decimal? @db.Decimal(10,2)
-  idUnidadMedida Int?
-  importancia    String 
+  idActividad          Int      @id @default(autoincrement())
+  idCultivo            Int
+  nombre               String
+  descripcion          String?
+  costo                Decimal? @db.Decimal(10,2)
+  importancia          String?
+  fecha                DateTime
+  idUnidadMedida       Int?
+  cantidad             Decimal? @db.Decimal(10,2)
+  idAplicacion         Int 
 
-  cultivo      InventarioCultivo @relation(fields: [idCultivo], references: [idInventarioCultivo])
-  unidadMedida UnidadMedida?     @relation(fields: [idUnidadMedida], references: [idUnidadMedida])
+  cultivo     Cultivo        @relation(fields: [idCultivo], references: [idCultivo])
+  aplicacion  Aplicacion     @relation(fields: [idAplicacion], references: [idAplicacion])
+  unidadMedida UnidadMedida? @relation(fields: [idUnidadMedida], references: [idUnidadMedida])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -149,7 +147,7 @@ model Aplicacion {
   cantidad             Decimal  @db.Decimal(10,2)
   fecha                DateTime
 
-  cultivo      InventarioCultivo  @relation(fields: [idCultivo], references: [idInventarioCultivo])
+  cultivo      Cultivo  @relation(fields: [idCultivo], references: [idCultivo])
   producto     InventarioProducto @relation(fields: [idInventarioProducto], references: [idInventarioProducto])
   recordatorios Recordatorio[]
 
@@ -157,6 +155,7 @@ model Aplicacion {
   updatedAt DateTime @updatedAt
 
   @@map("Aplicacion")
+  Actividad Actividad[]
 }
 
 model Recordatorio {
@@ -168,7 +167,7 @@ model Recordatorio {
   idCultivo      Int
   idAplicacion   Int?     
 
-  cultivo     InventarioCultivo @relation(fields: [idCultivo], references: [idInventarioCultivo])
+  cultivo     Cultivo @relation(fields: [idCultivo], references: [idCultivo])
   aplicacion  Aplicacion?       @relation(fields: [idAplicacion], references: [idAplicacion])
 
   createdAt DateTime @default(now())
@@ -184,7 +183,7 @@ model Estado {
 }
 
 model Ingreso {
-  idIngreso                   Int       @id @default(autoincrement())
+  idIngreso            Int       @id @default(autoincrement())
   descripcion          String
   monto                Float
   fecha                DateTime  @default(now())
@@ -195,8 +194,7 @@ model Ingreso {
   
   finca       InformacionFinca @relation(fields: [fincaId], references: [idFinca])
   usuario     Usuario            @relation(fields: [usuarioId], references: [idUsuario])
-  cultivo     InventarioCultivo? @relation(fields: [idInventarioCultivo], references: [idInventarioCultivo])
-  producto    InventarioProducto? @relation(fields: [idInventarioProducto], references: [idInventarioProducto])
+  
 }
 
 model Egreso {
@@ -210,7 +208,6 @@ model Egreso {
   fincaId       Int
   finca       InformacionFinca @relation(fields: [fincaId], references: [idFinca])
   usuario     Usuario            @relation(fields: [usuarioId], references: [idUsuario])
-  cultivo     InventarioCultivo? @relation(fields: [idInventarioCultivo], references: [idInventarioCultivo])
-  producto    InventarioProducto? @relation(fields: [idInventarioProducto], references: [idInventarioProducto])
+
 }
 

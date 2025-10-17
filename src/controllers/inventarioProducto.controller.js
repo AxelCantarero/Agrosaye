@@ -45,3 +45,16 @@ export const deleteInventarioProducto = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+export const getStock = async (req, res) => {
+  try {
+    const { idProducto } = req.params;
+    const stock = await inventarioService.obtenerStock(idProducto);
+    if (!stock) {
+      return res.status(404).json({ error: "Producto no encontrado en inventario" });
+    }
+
+    res.json({ idProducto: Number(idProducto), stock: stock.cantidad });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

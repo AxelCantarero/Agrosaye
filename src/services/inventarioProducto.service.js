@@ -17,12 +17,20 @@ export const deleteInventarioProducto = (id) =>
 export const aumentarInventarioProducto = async (idProducto, cantidad) => {
   return prisma.inventarioProducto.update({
     where: { idProducto: Number(idProducto) },
-    data: { cantidad: { increment: cantidad } }
+    data: { stock: { increment: cantidad } }
   });
 };
+
 export const disminuirInventarioProducto = async (idProducto, cantidad) => {
   return prisma.inventarioProducto.update({
     where: { idProducto: Number(idProducto) },
-    data: { cantidad: { decrement: cantidad } }
+    data: { stock: { decrement: cantidad } }
+  });
+};
+
+export const obtenerStock = async (idProducto) => {
+  return prisma.inventarioProducto.findUnique({
+    where: { idProducto: Number(idProducto) },
+    select: { cantidad: true }
   });
 };
