@@ -22,3 +22,11 @@ export const disminuirProduccionCultivo = async (idCultivo, cantidad) => {
     data: { produccion: { decrement: cantidad } }
   });
 };
+
+export const obtenerProduccion = async (idCultivo) => {
+  return prisma.inventarioCultivo.update({
+    where: {idCultivo: Number(idCultivo)},
+    select : {produccion: true}
+
+  })
+}

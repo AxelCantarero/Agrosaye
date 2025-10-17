@@ -153,9 +153,9 @@ model Aplicacion {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("Aplicacion")
   Actividad Actividad[]
+  @@map("Aplicacion")
+  
 }
 
 model Recordatorio {
@@ -164,11 +164,11 @@ model Recordatorio {
   descripcion    String?  
   fecha          DateTime
   estado         String   @default("pendiente") @db.VarChar(20)
-  idCultivo      Int
-  idAplicacion   Int?     
+  id_Cultivo      Int
+  id_Aplicacion   Int?     
 
-  cultivo     Cultivo @relation(fields: [idCultivo], references: [idCultivo])
-  aplicacion  Aplicacion?       @relation(fields: [idAplicacion], references: [idAplicacion])
+  cultivo     Cultivo @relation(fields: [id_Cultivo], references: [idCultivo])
+  aplicacion  Aplicacion?@relation(fields: [id_Aplicacion], references: [idAplicacion])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

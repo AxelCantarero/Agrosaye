@@ -1,6 +1,5 @@
 import prisma from '../config/prisma.js';
 
-//CRUD DE ACTIVIDADES
 export const getActividades = () => prisma.actividad.findMany();
 
 export const createActividad = (data) => prisma.actividad.create({ data });

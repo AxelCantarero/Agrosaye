@@ -1,6 +1,5 @@
 import prisma from '../config/prisma.js';
 
-//CRUD DE EGRESOS.
 export const getEgresos = () => prisma.egreso.findMany();
 
 export const createEgreso = (data) => prisma.egreso.create({ data });
